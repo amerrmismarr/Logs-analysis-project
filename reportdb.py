@@ -58,7 +58,7 @@ def executeQuery3(query):
     results = cursor.fetchall()
     print('\n On which days did more than 1% of requests lead to errors?\n')
     for i in results:
-        print('\t' + str(i[0]) + ' - ' + str(i[1]) + ' views')
+        print('\t' + str(i[0]) + ' - ' + str(i[1]) )
         print(" ")
 
     conn.close()
