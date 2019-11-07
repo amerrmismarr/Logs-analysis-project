@@ -1,7 +1,9 @@
+
+# Import postgresql library
 import psycopg2
 
 
-
+# query for question 1
 query1 = ''' select articles.title , count(*) as sum
  from articles join log
  on log.path = concat('/article/', articles.slug )
@@ -9,12 +11,16 @@ query1 = ''' select articles.title , count(*) as sum
  order by sum desc
  limit 3;'''
 
+# Check the views for question 2 and 3 in the Readme.md file
+
+# query for question 2
 query2 = ''' select author_with_slug.name, count(*) as views
  from log, author_with_slug 
  where log.path = concat('/article/', author_with_slug.slug) 
  group by author_with_slug.name
  order by views desc; '''
 
+# query for question 3
 query3 = ''' 
 select errors.day, round(100* errors.sum/total.totalnum,2) as percentage 
 from errors, total 
@@ -23,7 +29,7 @@ and 100*errors.sum/total.totalnum  > 1;
 
 '''
 
-
+# method to execute and print query1
 def executeQuery1(query):    
 
     conn = psycopg2.connect(database = "news")
@@ -37,6 +43,7 @@ def executeQuery1(query):
 
     conn.close()
 
+# method to execute and print query2
 def executeQuery2(query):    
 
     conn = psycopg2.connect(database = "news")
@@ -50,6 +57,7 @@ def executeQuery2(query):
 
     conn.close()
 
+# method to execute and print query3
 def executeQuery3(query):    
 
     conn = psycopg2.connect(database = "news")
