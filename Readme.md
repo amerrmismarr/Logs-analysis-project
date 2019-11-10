@@ -4,7 +4,7 @@ This project is part of Udacity's Full Stack Web Developer Nanodegree program.It
 
 **Requirements**
 
-Python - The code uses Python ver Python 3.7.4
+Python - The code uses Python ver Python 3
 
 Vagrant - A virtual environment builder and manager
 
@@ -15,11 +15,15 @@ Git - An open source version control system
 **How to access the project?**
 
 
-Download Gitbash
+Download Gitbash from https://git-scm.com/downloads
 
-Download Virtual box and vagrant
+Download Virtual box from https://www.virtualbox.org/wiki/Downloads
 
-Download the data provided by Udacity. Unzip the file in order to extract newsdata.sql. This file should be inside the Vagrant folder.
+Download Vagrant from https://www.vagrantup.com/downloads.html
+
+Download the data provided by Udacity from https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip
+
+Unzip the file in order to extract newsdata.sql. This file should be inside the Vagrant folder.
 
 Load the database using psql -d news -f newsdata.sql.
 
@@ -34,11 +38,27 @@ Now execute the Python file - python reportdb.py.
 
 _For question 2:_
 
-create view author_with_slug as select authors.name, articles.slug from articles, authors where articles.author = authors.id;
+'''sql
+CREATE VIEW
+author_with_slug AS
+SELECT authors.name, articles.slug
+FROM articles, authors
+WHERE articles.author = authors.id;
+'''
 
 _For Question 3:_
 
-create view errors as select cast(time as date) as day, count(*) as sum from log where status = '404 NOT FOUND' group by day;
+'''sql
+CREATE VIEW errors AS
+SELECT cast(time as date) as day, count(*) AS sum 
+FROM log 
+WHERE status = '404 NOT FOUND' group by day;
+'''
 
-create view total as select cast(time as date) as day, count(*) as totalnum from log group by day;
+'''sql
+CREATE VIEW total AS
+SELECT cast(time as date) AS day, count(*) AS totalnum
+FROM log 
+GROUP BY day;
+'''
 
