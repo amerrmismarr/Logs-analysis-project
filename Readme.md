@@ -38,27 +38,27 @@ Now execute the Python file - python reportdb.py.
 
 _For question 2:_
 
-'''sql
+```sql
 CREATE VIEW
 author_with_slug AS
 SELECT authors.name, articles.slug
 FROM articles, authors
 WHERE articles.author = authors.id;
-'''
+```
 
 _For Question 3:_
 
-'''sql
+```sql
 CREATE VIEW errors AS
 SELECT cast(time as date) as day, count(*) AS sum 
 FROM log 
 WHERE status = '404 NOT FOUND' group by day;
-'''
+```
 
-'''sql
+```sql
 CREATE VIEW total AS
 SELECT cast(time as date) AS day, count(*) AS totalnum
 FROM log 
 GROUP BY day;
-'''
+```
 
