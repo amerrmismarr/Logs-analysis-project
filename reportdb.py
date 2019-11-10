@@ -1,78 +1,92 @@
+#!/usr/bin/env python
 
 # Import postgresql library
 import psycopg2
 
 
 # query for question 1
-query1 = ''' select articles.title , count(*) as sum
- from articles join log
- on log.path = concat('/article/', articles.slug )
- group by articles.title
- order by sum desc
- limit 3;'''
+query1 = '''SELECT articles.title,count(*) as sum
+FROM articles join log
+ON log.path = concat('/article/', articles.slug)
+GROUP BY articles.title
+ORDER BY sum desc
+LIMIT 3;
+'''
 
 # Check the views for question 2 and 3 in the Readme.md file
 
 # query for question 2
-query2 = ''' select author_with_slug.name, count(*) as views
- from log, author_with_slug 
- where log.path = concat('/article/', author_with_slug.slug) 
- group by author_with_slug.name
- order by views desc; '''
-
-# query for question 3
-query3 = ''' 
-select errors.day, round(100* errors.sum/total.totalnum,2) as percentage 
-from errors, total 
-where errors.day = total.day
-and 100*errors.sum/total.totalnum  > 1;
-
+query2 = '''SELECT author_with_slug.name, count(*) as views
+FROM log, author_with_slug
+WHERE log.path = concat('/article/', author_with_slug.slug)
+GROUP BY author_with_slug.name
+ORDER BY views desc;
 '''
 
-# method to execute and print query1
-def executeQuery1(query):    
+# query for question 3
+query3 = '''SELECT errors.day, round(100.0* errors.sum/total.totalnum,2)
+AS percentage
+FROM errors, total
+WHERE errors.day = total.day
+AND 100.0*errors.sum/total.totalnum  > 1;
+'''
 
-    conn = psycopg2.connect(database = "news")
+
+def executeQuery(query):
+    """
+    execute_query returns the results of an SQL query.
+
+    execute_query takes an SQL query as a parameter,
+    executes the query and returns the results as a list of tuples.
+    args:
+    query - an SQL query statement to be executed.
+
+    returns:
+    A list of tuples containing the results of the query.
+    """
+    conn = psycopg2.connect(database="news")
     cursor = conn.cursor()
     cursor.execute(query)
     results = cursor.fetchall()
-    print('\n What are the most popular three articles of all time?\n')
-    for i in results:
-        print('\t' + str(i[0]) + ' - ' + str(i[1]) + ' views')
-        print(" ")
-
     conn.close()
+    return results
 
-# method to execute and print query2
-def executeQuery2(query):    
 
-    conn = psycopg2.connect(database = "news")
-    cursor = conn.cursor()
-    cursor.execute(query)
-    results = cursor.fetchall()
+def print_favourite_articles():
+    results = executeQuery(query1)
     print('\n Who are the most popular article authors of all time?\n')
     for i in results:
         print('\t' + str(i[0]) + ' - ' + str(i[1]) + ' views')
         print(" ")
 
-    conn.close()
 
-# method to execute and print query3
-def executeQuery3(query):    
-
-    conn = psycopg2.connect(database = "news")
-    cursor = conn.cursor()
-    cursor.execute(query)
-    results = cursor.fetchall()
-    print('\n On which days did more than 1% of requests lead to errors?\n')
+def print_popular_authors():
+    results = executeQuery(query2)
+    print('\n Who are the most popular article authors of all time?\n')
     for i in results:
-        print('\t' + str(i[0]) + ' - ' + str(i[1]) )
+        print('\t' + str(i[0]) + ' - ' + str(i[1]) + ' views')
         print(" ")
 
-    conn.close()
-    
+
+def print_errors():
+    results = executeQuery(query3)
+    print('\n On which days did more than 1% of requests lead to errors?\n')
+    for i in results:
+        print('\t' + str(i[0]) + ' - ' + str(i[1]) + ' % ' + 'errors')
+        print(" ")
 
 
-executeQuery1(query1)
-executeQuery2(query2)
-executeQuery3(query3)
+print_favourite_articles()
+print_popular_authors()
+print_errors()
+
+
+def main():
+    """Generate report."""
+    executeQuery(query1)
+    executeQuery(query2)
+    executeQuery(query3)
+
+
+if __name__ == '__main__':
+    main()
